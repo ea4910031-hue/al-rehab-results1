@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123d70">
+  <title>نتيجة طلاب مدرسة الرحاب الخاصة</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #123d70;
+      --blue: #2478c5;
+      --pale: #eaf4ff;
+      --page: #e7f2fc;
+      --border: #d5e4f3;
+      --text: #26384b;
+      --muted: #64748b;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      min-height: 100vh;
+      background: var(--page);
+      color: var(--text);
+      font-family: Tahoma, Arial, sans-serif;
+    }
+
+    .page { max-width: 900px; margin: auto; }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 8px 30px #19426c1a;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    h1 {
+      color: var(--navy);
+      font-size: 27px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .subtitle { color: var(--muted); font-size: 15px; }
+
+    .search {
+      background: #f4f9ff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 12px;
+      font-weight: bold;
+      color: var(--navy);
+    }
+
+    .search-row { display: flex; gap: 10px; }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      height: 48px;
+      padding: 0 14px;
+      border: 1px solid #c5d8ec;
+      border-radius: 9px;
+      background: white;
+      font: inherit;
+      font-size: 16px;
+      direction: ltr;
+      text-align: right;
+    }
+
+    input:focus {
+      outline: 2px solid #2478c555;
+      border-color: var(--blue);
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      background: var(--navy);
+      color: white;
+      padding: 0 24px;
+      min-height: 48px;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: .65; cursor: wait; }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .message.error {
+      display: block;
+      background: #fff0f0;
+      color: #a52626;
+    }
+
+    .message.info {
+      display: block;
+      background: var(--pale);
+      color: var(--navy);
+    }
+
+    #result { display: none; margin-top: 25px; }
+
+    h2 {
+      color: var(--navy);
+      font-size: 19px;
+      margin: 0 0 14px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .info {
+      min-width: 0;
+      background: #f7fbff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .info-label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .info-value {
+      display: block;
+      color: var(--navy);
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    table { width: 100%; border-collapse: collapse; text-align: right; }
+
+    thead { background: var(--navy); color: white; }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+    }
+
+    tbody tr:nth-child(odd) { background: var(--pale); }
+    tbody tr:nth-child(even) { background: white; }
+    tbody tr:last-child td { border-bottom: 0; }
+    td:last-child { color: var(--navy); font-weight: bold; }
+    .total-row { background: #d8eaff !important; }
+
+    footer {
+      margin-top: 25px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 14px 9px; }
+      .card { padding: 18px 13px; }
+      .header { flex-direction: column; gap: 10px; }
+      .logo { width: 82px; height: 82px; }
+      h1 { font-size: 21px; }
+      .subtitle { font-size: 13px; }
+      .search { padding: 15px; }
+      .search-row { flex-direction: column; }
+      button { width: 100%; }
+      .info-grid { grid-template-columns: 1fr; }
+      th, td { padding: 12px 10px; font-size: 14px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="card">
+      <header class="header">
+        <img
+          class="logo"
+          src="https://drive.google.com/uc?export=view&id=1_zV3Of5SG7623FKyA0jSjlUNuDGKL6Xv"
+          alt="شعار مدرسة الرحاب الخاصة"
+          onerror="this.style.display='none'"
+        >
+        <div>
+          <h1>نتيجة طلاب مدرسة الرحاب الخاصة</h1>
+          <p class="subtitle">استعلم عن النتيجة باستخدام الرقم القومي</p>
+        </div>
+      </header>
+
+      <section class="search">
+        <label for="nationalId">الرقم القومي للطالب</label>
+        <div class="search-row">
+          <input
+            id="nationalId"
+            type="text"
+            inputmode="numeric"
+            maxlength="14"
+            autocomplete="off"
+            placeholder="اكتب الرقم القومي المكوّن من 14 رقم"
+          >
+          <button id="searchButton" type="button">عرض النتيجة</button>
+        </div>
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+      </section>
+
+      <section id="result">
+        <h2>بيانات الطالب</h2>
+        <div id="studentInfo" class="info-grid"></div>
+
+        <h2>درجات المواد</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>المادة</th><th>درجة الطالب</th></tr>
+            </thead>
+            <tbody id="gradesBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer>
+        مدرسة الرحاب الخاصة<br>
+        نتمنى لجميع الطلاب دوام النجاح والتوفيق
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    // رابط تطبيق Google Apps Script المنشور
+    const API_URL =
+      'https://script.google.com/macros/s/AKfycbz3jk__KRxhv5G804pqNkkYvobEUszO7gx7ZN8-VL2g_oHfKzA5vfeb0bmYFan187yL/exec';
+
+    const ID_KEYS = ['الرقم القومي'];
+    const NAME_KEYS = ['الاسم', 'اسم الطالب'];
+    const CLASS_KEYS = ['الفصل', 'اسم الفصل'];
+    const GRADE_KEYS = ['الصف الدراسي', 'الصف'];
+    const TOTAL_KEYS = ['المجموع الكلي', 'المجموع'];
+    const INFO_KEYS = [...ID_KEYS, ...NAME_KEYS, ...CLASS_KEYS, ...GRADE_KEYS];
+
+    const input = document.getElementById('nationalId');
+    const button = document.getElementById('searchButton');
+    const message = document.getElementById('message');
+    const result = document.getElementById('result');
+
+    function clean(value) {
+      return String(value ?? '').trim().replace(/\s+/g, ' ');
+    }
+
+    function getValue(student, keys) {
+      const key = Object.keys(student).find(k => keys.includes(clean(k)));
+      return key ? student[key] : '';
+    }
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = 'message ' + type;
+    }
+
+    function addInfo(label, value) {
+      const item = document.createElement('div');
+      item.className = 'info';
+
+      const title = document.createElement('span');
+      title.className = 'info-label';
+      title.textContent = label;
+
+      const content = document.createElement('span');
+      content.className = 'info-value';
+      content.textContent = value || '—';
+
+      item.append(title, content);
+      document.getElementById('studentInfo').appendChild(item);
+    }
+
+    function renderStudent(student) {
+      const info = document.getElementById('studentInfo');
+      const grades = document.getElementById('gradesBody');
+      info.replaceChildren();
+      grades.replaceChildren();
+
+      addInfo('اسم الطالب', getValue(student, NAME_KEYS));
+
+      // لا نعرض الرقم القومي كاملًا على صفحة النتيجة
+      const classValue = getValue(student, CLASS_KEYS);
+      const gradeValue = getValue(student, GRADE_KEYS);
+
+      if (classValue) addInfo('الفصل', classValue);
+      if (gradeValue) addInfo('الصف الدراسي', gradeValue);
+
+      const entries = Object.entries(student)
+        .filter(([key, value]) =>
+          clean(key) &&
+          !INFO_KEYS.includes(clean(key)) &&
+          value !== '' &&
+          value !== null &&
+          value !== undefined
+        )
+        .sort(([a], [b]) => {
+          const aTotal = TOTAL_KEYS.includes(clean(a));
+          const bTotal = TOTAL_KEYS.includes(clean(b));
+          return Number(aTotal) - Number(bTotal);
+        });
+
+      entries.forEach(([subject, grade]) => {
+        const row = document.createElement('tr');
+        if (TOTAL_KEYS.includes(clean(subject))) row.className = 'total-row';
+
+        const subjectCell = document.createElement('td');
+        subjectCell.textContent = subject;
+
+        const gradeCell = document.createElement('td');
+        gradeCell.textContent = grade;
+
+        row.append(subjectCell, gradeCell);
+        grades.appendChild(row);
+      });
+
+      result.style.display = 'block';
+    }
+
+    function finishSearch() {
+      button.disabled = false;
+      button.textContent = 'عرض النتيجة';
+    }
+
+    // JSONP: إرسال الطلب كعنصر script لتجنب مشكلة CORS المعتادة
+    window.receiveStudentResult = function(response) {
+      finishSearch();
+
+      if (!response || !response.success) {
+        showMessage(
+          response && response.message
+            ? response.message
+            : 'حصل خطأ أثناء البحث. جربي تاني.',
+          'error'
+        );
+        return;
+      }
+
+      message.className = 'message';
+      message.textContent = '';
+      renderStudent(response.student);
+    };
+
+    function searchResult() {
+      result.style.display = 'none';
+      message.className = 'message';
+      message.textContent = '';
+
+      const nationalId = input.value.trim();
+
+      if (!/^[0-9٠-٩۰-۹]{14}$/.test(nationalId)) {
+        showMessage('اكتبي الرقم القومي كاملًا، 14 رقم.', 'error');
+        input.focus();
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = 'جاري البحث...';
+      showMessage('جاري البحث عن النتيجة...', 'info');
+
+      // إزالة أي طلب قديم لم ينتهِ
+      const oldScript = document.getElementById('resultRequest');
+      if (oldScript) oldScript.remove();
+
+      const script = document.createElement('script');
+      script.id = 'resultRequest';
+
+      script.onerror = function() {
+        finishSearch();
+        showMessage(
+          'تعذر الاتصال بخدمة النتائج. تأكدي من نشر Apps Script وإتاحته.',
+          'error'
+        );
+        script.remove();
+      };
+
+      const url = new URL(API_URL);
+      url.searchParams.set('action', 'lookup');
+      url.searchParams.set('nationalId', nationalId);
+      url.searchParams.set('callback', 'receiveStudentResult');
+
+      script.src = url.toString();
+      document.body.appendChild(script);
+    }
+
+    button.addEventListener('click', searchResult);
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Enter') searchResult();
+    });
+  </script>
+</body>
+</html>
